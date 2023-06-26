@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chat Room</title>
+</head>
+<body>
+  <div id="messages"></div>
+  <input type="text" id="inputMessage" placeholder="Type your message..." />
+  <button onclick="sendMessage()">Send</button>
+
+  <script>
+    const socket = new WebSocket('wss://spooledup.co.uk:3001');
+
+    // Event: WebSocket connection established
+    socket.onopen = () => {
+      console.log('Connected to the server');
+    };
+
+    // Event: Received a message from the server
+    socket.onmessage = (event) => {
+      const messagesDiv = document.getElementById('messages');
+      messagesDiv.innerHTML += `<p>${event.data}</p>`;
+    };
+
+    // Event: WebSocket connection closed
+    socket.onclose = () => {
+      console.log('Connection closed');
+    };
+
+    // Function to send a message
+    function sendMessage() {
+      const inputMessage = document.getElementById('inputMessage');
+      const message = inputMessage.value;
+      socket.send(message);
+      inputMessage.value = '';
+    }
+  </script>
+</body>
+</html>
